@@ -1,18 +1,16 @@
 {
-    "editor.formatOnSave": true,
-    "editor.insertSpaces": true,
-    "[yaml]": {
-        "editor.tabSize": 2,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-        "editor.tabSize": 2,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[go]": {
-        "editor.defaultFormatter": "golang.go"
-    },
-    "conventionalCommits.scopes": [
-        "general"
-    ]
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "conventionalCommits.scopes": ["general"]
 }
