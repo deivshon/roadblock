@@ -1,0 +1,16 @@
+linters:
+  disable-all: true
+  enable:
+    # --- Defaults
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    # ---
+    - gocheckcompilerdirectives
+    - perfsprint
+    - prealloc
+    - reassign
+    - tagliatelle
