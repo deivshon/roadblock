@@ -5,5 +5,5 @@ type Rule struct {
 	OneOf       *[]Rule `yaml:"oneOf"`
 	Not         *Rule   `yaml:"not"`
 	ConditionId *string `yaml:"conditionId"`
-	Message     *string `yaml:"message"`
+	Name        *string `yaml:"name"`
 }

@@ -11,7 +11,7 @@ conditions:
       equals: push
 
 rules:
-  - message: "Don't git push from the CLI"
+  - name: "prevent-git-push"
     allOf:
       - conditionId: git-command
       - conditionId: git-push-subcommand

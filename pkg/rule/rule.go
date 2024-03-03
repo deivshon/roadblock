@@ -10,10 +10,10 @@ func (r *Rule) ValidationCheck() error {
 }
 
 func (r *Rule) validationCheckAux(recursionLevel int) error {
-	if recursionLevel == 0 && (r.Message == nil || len(*r.Message) == 0) {
-		return errors.New("all rules must specify a message to display when they match")
-	} else if recursionLevel != 0 && r.Message != nil {
-		return fmt.Errorf("rejecting error message `%v`: must be specified at root node of the rule", *r.Message)
+	if recursionLevel == 0 && (r.Name == nil || len(*r.Name) == 0) {
+		return errors.New("all rules must specify a name")
+	} else if recursionLevel != 0 && r.Name != nil {
+		return fmt.Errorf("rejecting rule name `%v`: must be specified at root node of the rule", *r.Name)
 	}
 
 	activeCount := 0
@@ -31,7 +31,7 @@ func (r *Rule) validationCheckAux(recursionLevel int) error {
 	}
 
 	if activeCount != 1 {
-		return errors.New("more than one operator active in the same rule")
+		return errors.New("more than one operator active in the same node")
 	}
 
 	var children []Rule
