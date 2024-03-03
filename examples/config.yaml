@@ -1,0 +1,17 @@
+conditions:
+  - id: git-command
+    select:
+      wordIndex: 0
+    evaluate:
+      regex: git$
+  - id: git-push-subcommand
+    select:
+      wordIndex: 1
+    evaluate:
+      equals: push
+
+rules:
+  - message: "Don't git push from the CLI"
+    allOf:
+      - conditionId: git-command
+      - conditionId: git-push-subcommand
