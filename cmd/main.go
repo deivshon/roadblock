@@ -14,7 +14,13 @@ import (
 const configsName = "config.yml"
 const roadblockConfigDir = "roadblock"
 
+const roadblockSkipEnv = "ROADBLOCK_SKIP"
+
 func main() {
+	if os.Getenv(roadblockSkipEnv) != "" {
+		return
+	}
+
 	command := flag.String("t", "", "Target command to evaluate")
 	rootConfigDir := flag.String("c", "", "Configurations root directory")
 	showBrokenRuleConfig := flag.Bool("s", false, "When a command is forbidden, show the configuration path containing the broken rule")
