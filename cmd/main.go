@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"main/pkg/config"
+	"main/pkg/checker"
 	"main/pkg/utils"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/mattn/go-shellwords"
 )
@@ -40,23 +40,29 @@ func main() {
 		utils.Log.Fatalf("could not parse command into shellwords: %v", err)
 	}
 
+	errorsChan := make(chan error)
+	passedChan := make(chan bool, 32)
+	brokenRulesChan := make(chan string)
+	inputPathsChan := make(chan string, len(configPaths))
+
+	for range runtime.NumCPU() {
+		w := checker.NewCheckerWorker(parsedCommand, passedChan, errorsChan, brokenRulesChan, inputPathsChan, *showBrokenRuleConfig)
+		go w.StartWorker()
+	}
+
 	for _, p := range configPaths {
-		runtimeConfig, err := config.GetConfig(p)
-		if err != nil {
-			utils.Log.Fatalf("could not get config `%v`: %v", p, err)
-		}
+		inputPathsChan <- p
+	}
 
-		forbidden, err := runtimeConfig.IsCommandForbidden(parsedCommand)
-		if err != nil {
-			utils.Log.Fatalf("could not evaluate command: %v\nsource config: %v", err, p)
-		}
-
-		if forbidden.Forbidden {
-			configErrorMessage := ""
-			if *showBrokenRuleConfig {
-				configErrorMessage = fmt.Sprintf("\nsource config: %v", p)
-			}
-			utils.Log.Fatalf("forbidden by rule `%v`%s", forbidden.BrokenRule, configErrorMessage)
+	passedConfigs := 0
+	for passedConfigs < len(configPaths) {
+		select {
+		case <-passedChan:
+			passedConfigs++
+		case msg := <-brokenRulesChan:
+			utils.Log.Fatalf(msg)
+		case err := <-errorsChan:
+			utils.Log.Fatalf("%v", err)
 		}
 	}
 }
