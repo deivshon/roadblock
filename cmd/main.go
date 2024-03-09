@@ -35,20 +35,20 @@ func main() {
 		utils.Log.Fatalf("could not recursively search configurations root directory: %v", err)
 	}
 
+	parsedCommand, err := shellwords.Parse(*command)
+	if err != nil {
+		utils.Log.Fatalf("could not parse command into shellwords: %v", err)
+	}
+
 	for _, p := range configPaths {
 		runtimeConfig, err := config.GetConfig(p)
 		if err != nil {
-			utils.Log.Fatalf("could not get config: %v", err)
-		}
-
-		parsedCommand, err := shellwords.Parse(*command)
-		if err != nil {
-			utils.Log.Fatalf("could not parse command into shellwords: %v", err)
+			utils.Log.Fatalf("could not get config `%v`: %v", p, err)
 		}
 
 		forbidden, err := runtimeConfig.IsCommandForbidden(parsedCommand)
 		if err != nil {
-			utils.Log.Fatalf("could not evaluate command: %v", err)
+			utils.Log.Fatalf("could not evaluate command: %v\nsource config: %v", err, p)
 		}
 
 		if forbidden.Forbidden {
