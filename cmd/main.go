@@ -27,6 +27,10 @@ func main() {
 
 	flag.Parse()
 
+	if commandIsException(*command) {
+		return
+	}
+
 	if *rootConfigDir == "" {
 		configDir, err := os.UserConfigDir()
 		if err != nil {
