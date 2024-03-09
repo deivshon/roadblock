@@ -2,54 +2,56 @@ package rule
 
 import (
 	"errors"
+	"fmt"
 )
 
-func (r *RuleWithMeta) ValidationCheck() error {
-	if len(r.Name) == 0 {
-		return errors.New("a name is required")
-	}
-
-	return r.Rule.ValidationCheck()
+func (r *RuleWithMeta) Evaluate(judge func(string) (bool, error)) (bool, error) {
+	return r.Rule.evaluate(judge)
 }
 
-func (r *Rule) ValidationCheck() error {
-	activeCount := 0
-	if r.AllOf != nil {
-		activeCount++
-	}
-	if r.OneOf != nil {
-		activeCount++
+func (r *Rule) evaluate(judge func(string) (bool, error)) (bool, error) {
+	if r.ConditionId != nil {
+		res, err := judge(*r.ConditionId)
+		if err != nil {
+			return false, fmt.Errorf("error in judge function: %w", err)
+		}
+
+		return res, nil
 	}
 	if r.Not != nil {
-		activeCount++
-	}
-	if r.ConditionId != nil {
-		activeCount++
-	}
-
-	if activeCount == 0 {
-		return errors.New("found node with no operator active")
-	}
-	if activeCount != 1 {
-		return errors.New("more than one operator active in the same node")
-	}
-
-	var children []Rule
-	if r.AllOf != nil {
-		children = *r.AllOf
-	} else if r.OneOf != nil {
-		children = *r.OneOf
-	} else if r.Not != nil {
-		children = append(children, *r.Not)
-	} else if r.ConditionId != nil {
-		return nil
-	}
-
-	for _, r := range children {
-		if err := r.ValidationCheck(); err != nil {
-			return err
+		res, err := r.Not.evaluate(judge)
+		if err != nil {
+			return false, err
 		}
+
+		return !res, nil
+	}
+	if r.AllOf != nil {
+		for _, rule := range *r.AllOf {
+			res, err := rule.evaluate(judge)
+			if err != nil {
+				return false, err
+			}
+			if !res {
+				return false, nil
+			}
+		}
+
+		return true, nil
+	}
+	if r.OneOf != nil {
+		for _, rule := range *r.OneOf {
+			res, err := rule.evaluate(judge)
+			if err != nil {
+				return false, err
+			}
+			if res {
+				return true, nil
+			}
+		}
+
+		return false, nil
 	}
 
-	return nil
+	return false, errors.New("node has no active operator")
 }
