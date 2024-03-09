@@ -14,11 +14,7 @@ func (c *RoadblockConfig) ValidationCheck() error {
 
 	for idx, rule := range c.Rules {
 		if err := rule.ValidationCheck(); err != nil {
-			if rule.Name != nil {
-				return fmt.Errorf("error in rule `%v`: %w", *rule.Name, err)
-			} else {
-				return fmt.Errorf("error in rule no. %v: %w", idx+1, err)
-			}
+			return fmt.Errorf("error in rule #%v (`%v`): %w", idx+1, rule.Name, err)
 		}
 	}
 

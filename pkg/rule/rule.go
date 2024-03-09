@@ -2,20 +2,17 @@ package rule
 
 import (
 	"errors"
-	"fmt"
 )
 
-func (r *Rule) ValidationCheck() error {
-	return r.validationCheckAux(0)
-}
-
-func (r *Rule) validationCheckAux(recursionLevel int) error {
-	if recursionLevel == 0 && (r.Name == nil || len(*r.Name) == 0) {
-		return errors.New("all rules must specify a name")
-	} else if recursionLevel != 0 && r.Name != nil {
-		return fmt.Errorf("rejecting rule name `%v`: must be specified at root node of the rule", *r.Name)
+func (r *RuleWithMeta) ValidationCheck() error {
+	if len(r.Name) == 0 {
+		return errors.New("a name is required")
 	}
 
+	return r.Rule.ValidationCheck()
+}
+
+func (r *Rule) ValidationCheck() error {
 	activeCount := 0
 	if r.AllOf != nil {
 		activeCount++
@@ -30,6 +27,9 @@ func (r *Rule) validationCheckAux(recursionLevel int) error {
 		activeCount++
 	}
 
+	if activeCount == 0 {
+		return errors.New("found node with no operator active")
+	}
 	if activeCount != 1 {
 		return errors.New("more than one operator active in the same node")
 	}
@@ -46,8 +46,7 @@ func (r *Rule) validationCheckAux(recursionLevel int) error {
 	}
 
 	for _, r := range children {
-		err := r.validationCheckAux(recursionLevel + 1)
-		if err != nil {
+		if err := r.ValidationCheck(); err != nil {
 			return err
 		}
 	}
