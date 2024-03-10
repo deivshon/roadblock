@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +10,10 @@ import (
 func SearchFilesRecursive(dirPath string, needleFilename string) ([]string, error) {
 	pathData, err := os.Stat(dirPath)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return []string{}, nil
+		}
+
 		return nil, fmt.Errorf("could not stat `%v`: %w", dirPath, err)
 	}
 	if !pathData.IsDir() {
