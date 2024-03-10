@@ -32,7 +32,19 @@ $ make release
 
 You can set the environment variable `ROADBLOCK_SKIP` to any value to make roadblock completely skip all checks
 
-This can also be needed in the unfortunate case where roadblock keeps crashing and prevents you from entering any command
+The commands for setting the `ROADBLOCK_SKIP` variable
+
+```bash
+export ROADBLOCK_SKIP=1 # bash
+```
+
+```sh
+set -gx ROADBLOCK_SKIP 1 # fish
+```
+
+are also automatically ignored
+
+This can be needed in the unfortunate case where roadblock keeps crashing and prevents you from entering any command
 
 ## More documentation
 
