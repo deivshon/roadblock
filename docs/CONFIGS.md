@@ -27,7 +27,7 @@ Below are tables listing all the available options for each of these sections
 
 #
 
-Note:
+Note
 
 - In a condition, **exactly one selector and evaluator must be active**
 - The scope of a condition is the file it's contained in
@@ -61,7 +61,7 @@ rules: ...
 
 ## Rules
 
-The rules section is a list of rules. Each rule must have a `name` and a `rule` field, where the actual conditions combination will be laid out
+The rules section is a list of rules. Each rule must have a `name` and a `rule` field, where the actual conditions combination is laid out
 
 The available operators are
 
@@ -74,7 +74,7 @@ The available operators are
 
 #
 
-Note:
+Note
 
 - **Exactly one operator must be active per level**
 
@@ -120,7 +120,7 @@ rules:
         - conditionId: git-push-subcommand
 ```
 
-Wrong example (the referenced `conditionId` "`some-random-id`" does not exist in the conditions)
+Wrong example (the referenced `conditionId` "`some-random-id`" does not exist in the file's conditions section)
 
 ```yml
 rules:

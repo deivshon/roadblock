@@ -11,7 +11,7 @@ roadblock accepts the following CLI arguments
 | Argument | Description                                                                                                                    | Optional | Default                                     |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------------- |
 | `-t`     | The command to be analyzed                                                                                                     | Yes      | Empty string                                |
-| `-c`     | Root directory for the rules configuration files                                                                               | Yes      | `{USER_CONFIG_DIR}/roadblock`               |
+| `-c`     | Root directory for the rule configuration files                                                                                | Yes      | `{USER_CONFIG_DIR}/roadblock`               |
 | `-g`     | Path to the global configuration file                                                                                          | Yes      | `{USER_CONFIG_DIR}/roadblock/roadblock.yml` |
 | `-s`     | If passed, when a command is forbidden, the path of the source configuration file containing the rule that forbids it is shown | Yes      | false                                       |
 

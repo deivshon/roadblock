@@ -47,4 +47,6 @@ end
 bind \r command_check
 ```
 
-**Note**: this will prevent you from using fish's multiline command editing
+Note
+
+- This will prevent you from using fish's multiline command editing
