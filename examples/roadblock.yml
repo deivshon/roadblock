@@ -1,0 +1,28 @@
+# Global configuration file, by default searched in {USER_CONFIG_DIR}/roadblock/roadblock.yml
+
+parsing:
+  # Remove wrappers before command analysis
+  # e.g. `time sudo git push` will be analyzed as `git push`
+  #
+  # Note: wrappers recognition is naive, if wrapper flags are present
+  #       wrappers will not be recognized
+  #
+  # Default: true
+  removeWrappers: true
+
+  # Adds a default list of wrappers:
+  # - sudo
+  # - doas
+  # - time
+  # - strace
+  # - nice
+  #
+  # Default: true
+  addDefaultWrappers: true
+
+  # Adds the wrappers in this list to the list of recognized wrappers
+  #
+  # Default: empty
+  wrappers:
+    - someWrapperCommand
+    - someOtherWrapperCommand

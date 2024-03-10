@@ -3,16 +3,15 @@ package main
 import (
 	"flag"
 	"main/pkg/checker"
+	"main/pkg/parsing"
 	"main/pkg/utils"
 	"os"
-	"path/filepath"
 	"runtime"
-
-	"github.com/mattn/go-shellwords"
 )
 
 const configsName = "config.yml"
 const roadblockConfigDir = "roadblock"
+const roadblockGlobalConfigPath = "roadblock.yml"
 
 const roadblockSkipEnv = "ROADBLOCK_SKIP"
 
@@ -24,30 +23,18 @@ func main() {
 	command := flag.String("t", "", "Target command to evaluate")
 	rootConfigDir := flag.String("c", "", "Configurations root directory")
 	showBrokenRuleConfig := flag.Bool("s", false, "When a command is forbidden, show the configuration path containing the broken rule")
-
+	globalConfigPath := flag.String("g", "", "Path to the global configuration")
 	flag.Parse()
 
 	if commandIsException(*command) {
 		return
 	}
 
-	if *rootConfigDir == "" {
-		configDir, err := os.UserConfigDir()
-		if err != nil {
-			utils.Log.Fatalf("could not get user configuration directory: %v", err)
-		}
+	globalConfig, configPaths := getAllConfigs(*rootConfigDir, *globalConfigPath)
 
-		*rootConfigDir = filepath.Join(configDir, roadblockConfigDir)
-	}
-
-	configPaths, err := utils.SearchFilesRecursive(*rootConfigDir, configsName)
+	parsedCommand, err := parsing.ParseCommand(*command, globalConfig.Parsing)
 	if err != nil {
-		utils.Log.Fatalf("could not recursively search configurations root directory: %v", err)
-	}
-
-	parsedCommand, err := shellwords.Parse(*command)
-	if err != nil {
-		utils.Log.Fatalf("could not parse command into shellwords: %v", err)
+		utils.Log.Fatalf("could not parse command: %v", err)
 	}
 
 	errorsChan := make(chan error)
