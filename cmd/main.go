@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"main/pkg/checker"
 	"main/pkg/parsing"
 	"main/pkg/utils"
 	"os"
@@ -43,7 +42,7 @@ func main() {
 	inputPathsChan := make(chan string, len(configPaths))
 
 	for range runtime.NumCPU() {
-		w := checker.NewCheckerWorker(parsedCommand, passedChan, errorsChan, brokenRulesChan, inputPathsChan, *showBrokenRuleConfig)
+		w := NewCheckerWorker(parsedCommand, passedChan, errorsChan, brokenRulesChan, inputPathsChan, *showBrokenRuleConfig)
 		go w.StartWorker()
 	}
 

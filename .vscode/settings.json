@@ -15,5 +15,11 @@
   "[go]": {
     "editor.defaultFormatter": "golang.go"
   },
-  "conventionalCommits.scopes": ["general", "config", "rules", "exceptions"]
+  "conventionalCommits.scopes": [
+    "general",
+    "config",
+    "rules",
+    "exceptions",
+    "workers"
+  ]
 }
