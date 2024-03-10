@@ -43,6 +43,7 @@ func (w *CheckerWorker) StartWorker() {
 				configErrorMessage = fmt.Sprintf("\nsource config: %v", p)
 			}
 			w.brokenRulesChan <- fmt.Sprintf("forbidden by rule `%v`%s", forbidden.BrokenRule, configErrorMessage)
+			continue
 		}
 
 		w.passedChan <- true
