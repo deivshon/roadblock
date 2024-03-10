@@ -12,12 +12,17 @@ Add the following to your `.bashrc`
 shopt -s extdebug
 
 command_check() {
+    if ! which roadblock &>/dev/null; then
+        printf "\ncommand_check: roadblock can't be found in PATH: commands will not be checked\n"
+        exit 0
+    fi
+
     roadblock_output=$(roadblock -t "$BASH_COMMAND" 2>&1)
     roadblock_status=$?
 
     if [[ $roadblock_status -ne 0 ]]; then
         printf 1>&2 "%s\n" "$roadblock_output"
-        false
+        exit 1
     fi
 }
 
@@ -32,6 +37,12 @@ Add the following to your `config.fish`
 
 ```sh
 function command_check
+    if not which &>/dev/null roadblock
+        printf 2>&1 "\ncommand_check: roadblock can't be found in PATH: commands will not be checked"
+        commandline -f execute
+        return
+    end
+
     set -l roadblock_output (roadblock -t $(commandline) 2>&1)
     set -l roadblock_status $status
 
