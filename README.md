@@ -15,6 +15,8 @@ roadblock accepts the following CLI arguments
 | `-g`     | Path to the global configuration file                                                                                          | Yes      | `{USER_CONFIG_DIR}/roadblock/roadblock.yml` |
 | `-s`     | If passed, when a command is forbidden, the path of the source configuration file containing the rule that forbids it is shown | Yes      | false                                       |
 
+A self-documenting global configuration file can be found in `docs/configuration-examples/roadblock.yml`
+
 ## Install
 
 To compile roadblock **the Go toolchain is required**
